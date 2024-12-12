@@ -57,10 +57,12 @@ function initMap() {
 function loadLegend(layer, style) {
   const apiKey = "TW2ZPXA0-TW2Z-TW2Z-TW2Z-TW2ZPXA04O";
 
-  // Safemap API URL
+  // 프록시 서버 URL을 사용
+  const proxyUrl = `http://localhost:3000/proxy`;
   const targetUrl = `http://www.safemap.go.kr/legend/legendApiXml.do?apikey=${apiKey}&layer=${layer}&style=${style}`;
+  const url = `${proxyUrl}?url=${encodeURIComponent(targetUrl)}`;
 
-  fetch(targetUrl)
+  fetch(url)
     .then((response) => {
       if (!response.ok) throw new Error("Failed to fetch legend data");
       return response.text();
