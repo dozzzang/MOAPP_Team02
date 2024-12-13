@@ -13,93 +13,13 @@
             type="text/javascript"
             src="https://map.vworld.kr/js/vworldMapInit.js.do?version=2.0&apiKey=7AACB7E3-3F8C-315A-9BC4-9086ABB03D25"
     ></script>
-    <script defer>
-        function initMap() {
-            const map = new ol.Map({
-                target: "vmap",
-                view: new ol.View({
-                    center: ol.proj.fromLonLat([127.5, 36.5]), // 대한민국 중심 좌표
-                    zoom: 7,
-                }),
-                interactions: ol.interaction.defaults().extend([
-                    new ol.interaction.MouseWheelZoom(), // 마우스 스크롤 확대/축소 활성화
-                ]),
-                layers: [
-                    new ol.layer.Tile({
-                        source: new ol.source.XYZ({
-                            url: "https://xdworld.vworld.kr/2d/Base/202002/{z}/{x}/{y}.png",
-                        }),
-                    }),
-                ],
-            });
-
-            // WMS 레이어 추가
-            function addWMSLayer() {
-                const param = {
-                    name: "범죄주의구간(성폭력)",
-                    serverUrl:
-                        "https://www.safemap.go.kr/openApiService/wms/getLayerData.do?apikey=TW2ZPXA0-TW2Z-TW2Z-TW2Z-TW2ZPXA04O",
-                    layername: "A2SM_CRMNLHSPOT_TOT",
-                    styles: "A2SM_CrmnlHspot_Tot_Rape",
-                };
-
-                const wmsLayer = new ol.layer.Tile({
-                    source: new ol.source.TileWMS({
-                        url: param.serverUrl,
-                        params: {
-                            LAYERS: param.layername,
-                            STYLES: param.styles,
-                            FORMAT: "image/png",
-                            TRANSPARENT: true,
-                        },
-                        projection: "EPSG:3857", // 좌표계 설정
-                    }),
-                });
-
-                map.addLayer(wmsLayer);
-                loadLegend(param.layername, param.styles);
-            }
-
-            // 범례 데이터를 XML에서 직접 로드
-            function loadLegend(layer, style) {
-                const apiKey = "TW2ZPXA0-TW2Z-TW2Z-TW2Z-TW2ZPXA04O";
-                const targetUrl = `http://www.safemap.go.kr/legend/legendApiXml.do?apikey=${apiKey}&layer=${layer}&style=${style}`;
-
-                fetch(targetUrl)
-                    .then((response) => {
-                        if (!response.ok) throw new Error("Failed to fetch legend data");
-                        return response.text();
-                    })
-                    .then((xmlString) => {
-                        const parser = new DOMParser();
-                        const xmlDoc = parser.parseFromString(xmlString, "application/xml");
-
-                        const legends = xmlDoc.getElementsByTagName("legend");
-                        const legendContent = document.getElementById("legend-content");
-                        legendContent.innerHTML = ""; // 기존 범례 데이터 초기화
-
-                        for (let i = 0; i < legends.length; i++) {
-                            const legend = legends[i];
-                            const color = legend.getElementsByTagName("color")[0].textContent;
-                            const label = legend.getElementsByTagName("label")[0].textContent;
-
-                            const legendItem = document.createElement("div");
-                            legendItem.innerHTML = `
-                                <span style="color: ${color};">●</span> ${label}
-                            `;
-                            legendContent.appendChild(legendItem);
-                        }
-                    })
-                    .catch((error) => {
-                        console.error("Error loading legend:", error);
-                    });
-            }
-
-            addWMSLayer();
-        }
-
-        document.addEventListener("DOMContentLoaded", initMap);
+    <script src="createMap.js" defer></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            alert("HTML and JavaScript are working!");
+        });
     </script>
+
     <style>
         #vmap {
           width: 100%;

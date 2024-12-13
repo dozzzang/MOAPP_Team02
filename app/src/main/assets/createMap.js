@@ -58,15 +58,16 @@ function loadLegend(layer, style) {
   const apiKey = "TW2ZPXA0-TW2Z-TW2Z-TW2Z-TW2ZPXA04O";
 
   // 프록시 서버 URL을 사용
-  const proxyUrl = `http://localhost:3000/proxy`;
+  const proxyUrl = `http://10.0.2.2:3000/proxy`; // Node.js 프록시 서버
   const targetUrl = `http://www.safemap.go.kr/legend/legendApiXml.do?apikey=${apiKey}&layer=${layer}&style=${style}`;
   const url = `${proxyUrl}?url=${encodeURIComponent(targetUrl)}`;
 
   fetch(url)
-    .then((response) => {
-      if (!response.ok) throw new Error("Failed to fetch legend data");
-      return response.text();
-    })
+     .then((response) => {
+        console.log(`[DEBUG] Fetch response status: ${response.status}`);
+        if (!response.ok) throw new Error("Failed to fetch legend data");
+        return response.text();
+      })
     .then((xmlString) => {
       // XML 문자열을 DOM 객체로 변환
       const parser = new DOMParser();
@@ -91,8 +92,8 @@ function loadLegend(layer, style) {
       }
     })
     .catch((error) => {
-      console.error("Error loading legend:", error);
-    });
+        console.error(`[ERROR] Fetch failed: ${error.message}`);
+      });
 }
 
 // 지도 초기화

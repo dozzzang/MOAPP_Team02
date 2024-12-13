@@ -30,7 +30,10 @@ class MapActivity : AppCompatActivity() {
             javaScriptEnabled = true
             domStorageEnabled = true
             mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+            allowContentAccess = true
             allowFileAccess = true
+            cacheMode = WebSettings.LOAD_NO_CACHE
+            userAgentString = "Android WebView"
         }
 
         // WebViewClient 설정
@@ -39,12 +42,24 @@ class MapActivity : AppCompatActivity() {
         // WebChromeClient 설정
         binding.webView.webChromeClient = object : WebChromeClient() {
             override fun onConsoleMessage(consoleMessage: ConsoleMessage): Boolean {
-                Log.d("WebView", "Console: ${consoleMessage.message()}")
+                Log.d("WebViewConsole", "Message: ${consoleMessage.message()} -- From line ${consoleMessage.lineNumber()} of ${consoleMessage.sourceId()}")
                 return true
             }
         }
 
-        // HTML 파일 로드
-        binding.webView.loadUrl("file:///android_asset/vworld_map.html")
+        binding.webView.webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+                // 모든 URL 로드를 허용
+                return false
+            }
+        }
+
+        binding.webView.loadUrl("http://10.0.2.2:3000")
+
+        binding.webView.webViewClient = object : WebViewClient() {
+            override fun onPageFinished(view: WebView?, url: String?) {
+                Log.d("WebView", "Page finished loading: $url")
+            }
+        }
     }
 }
