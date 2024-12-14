@@ -16,7 +16,13 @@ function initMap() {
         }),
       }),
     ],
-  });
+     controls: ol.control.defaults().extend([
+          new ol.control.Zoom({
+            zoomInTipLabel: "확대", // 확대 버튼 툴팁
+            zoomOutTipLabel: "축소", // 축소 버튼 툴팁
+          }),
+        ]),
+      });
   // WMS 레이어 저장 객체
   const overlayLayers = {
     모두보기: new ol.layer.Tile({
@@ -249,5 +255,22 @@ function initMap() {
   // WMS 레이어 추가 호출
   addWMSLayer();
 }
+const style = document.createElement("style");
+style.innerHTML = `
+  .ol-zoom {
+    background-color: rgba(0, 0, 0, 0.8) !important;
+    border-radius: 10px;
+    width: 60px;
+    height: 60px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    font-size: 24px;
+    color: white;
+  }
+  .ol-zoom-in,
+  .ol-zoom-out {
+    text-align: center;
+  }
+`;
+document.head.appendChild(style);
 // 지도 초기화
 initMap();
