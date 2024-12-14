@@ -3,7 +3,6 @@ function initMap() {
   const map = new ol.Map({
     target: "vmap",
     view: new ol.View({
-      center: ol.proj.fromLonLat([127.5, 36.5]), // 대한민국 중심 좌표
       zoom: 15, // 기본 줌 레벨을 15로 설정
     }),
     interactions: ol.interaction.defaults().extend([
