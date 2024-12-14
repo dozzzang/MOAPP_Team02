@@ -4,7 +4,7 @@ function initMap() {
     target: "vmap",
     view: new ol.View({
       center: ol.proj.fromLonLat([127.5, 36.5]), // 대한민국 중심 좌표
-      zoom: 7,
+      zoom: 15, // 기본 줌 레벨을 15로 설정
     }),
     interactions: ol.interaction.defaults().extend([
       new ol.interaction.MouseWheelZoom(), // 마우스 스크롤 확대/축소 활성화
@@ -49,8 +49,60 @@ function initMap() {
     loadLegend(param.layername, param.styles);
   }
 
+  // 현재 위치 기반으로 지도를 이동시키는 함수
+  function setCurrentLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          const coords = ol.proj.fromLonLat([longitude, latitude]);
+          map.getView().setCenter(coords); // 지도 중심을 현재 위치로 이동
+          map.getView().setZoom(15); // 줌 레벨 설정
+        },
+        (error) => {
+          console.error(`[ERROR] Geolocation failed: ${error.message}`);
+          alert("현재 위치를 가져올 수 없습니다.");
+        }
+      );
+    } else {
+      console.error("[ERROR] Geolocation is not supported by this browser.");
+      alert("브라우저가 현재 위치 기능을 지원하지 않습니다.");
+    }
+  }
+
+  // "현재 위치로 이동" 버튼 생성 및 이벤트 추가
+  function addCurrentLocationButton() {
+    const button = document.createElement("button");
+    button.innerHTML = `<img src="https://img.icons8.com/ios-filled/50/000000/marker.png" alt="현재 위치" style="width: 20px; height: 20px; vertical-align: middle;" />`;
+    button.title = "현재 위치로 이동";
+    button.style.position = "absolute";
+    button.style.bottom = "20px";
+    button.style.right = "10px";
+    button.style.width = "50px";
+    button.style.height = "50px";
+    button.style.backgroundColor = "white";
+    button.style.border = "1px solid #ccc";
+    button.style.borderRadius = "50%";
+    button.style.boxShadow = "0 2px 6px rgba(0,0,0,0.3)";
+    button.style.display = "flex";
+    button.style.alignItems = "center";
+    button.style.justifyContent = "center";
+    button.style.cursor = "pointer";
+    button.style.zIndex = 1000;
+
+    button.onclick = setCurrentLocation;
+
+    document.body.appendChild(button);
+  }
+
+  // 맵 초기화 시 현재 위치 설정
+  setCurrentLocation();
+
   // WMS 레이어 추가 호출
   addWMSLayer();
+
+  // 현재 위치 버튼 추가
+  addCurrentLocationButton();
 }
 
 // 범례 데이터를 XML에서 로드하는 함수
@@ -63,11 +115,11 @@ function loadLegend(layer, style) {
   const url = `${proxyUrl}?url=${encodeURIComponent(targetUrl)}`;
 
   fetch(url)
-     .then((response) => {
-        console.log(`[DEBUG] Fetch response status: ${response.status}`);
-        if (!response.ok) throw new Error("Failed to fetch legend data");
-        return response.text();
-      })
+    .then((response) => {
+      console.log(`[DEBUG] Fetch response status: ${response.status}`);
+      if (!response.ok) throw new Error("Failed to fetch legend data");
+      return response.text();
+    })
     .then((xmlString) => {
       // XML 문자열을 DOM 객체로 변환
       const parser = new DOMParser();
@@ -92,8 +144,8 @@ function loadLegend(layer, style) {
       }
     })
     .catch((error) => {
-        console.error(`[ERROR] Fetch failed: ${error.message}`);
-      });
+      console.error(`[ERROR] Fetch failed: ${error.message}`);
+    });
 }
 
 // 지도 초기화
