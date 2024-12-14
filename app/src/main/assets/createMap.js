@@ -156,6 +156,63 @@ function initMap() {
   // 레이어 컨트롤 UI 호출
   addLayerControl();
 
+function addLegendManually() {
+  const legendData = [
+    { color: "#ffffb2", grade: "1등급" },
+    { color: "#fee88b", grade: "2등급" },
+    { color: "#fed165", grade: "3등급" },
+    { color: "#fdb751", grade: "4등급" },
+    { color: "#fd9b43", grade: "5등급" },
+    { color: "#fa7a35", grade: "6등급" },
+    { color: "#f45629", grade: "7등급" },
+    { color: "#ea3420", grade: "8등급" },
+    { color: "#d31a23", grade: "9등급" },
+    { color: "#bd0026", grade: "10등급" },
+  ];
+
+  const legendContainer = document.createElement("div");
+  legendContainer.id = "legend-container";
+  legendContainer.style.position = "absolute";
+  legendContainer.style.bottom = "20px";
+  legendContainer.style.left = "10px";
+  legendContainer.style.backgroundColor = "rgba(255, 255, 255, 0.9)";
+  legendContainer.style.padding = "10px";
+  legendContainer.style.borderRadius = "5px";
+  legendContainer.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.5)";
+  legendContainer.style.width = "160px";
+  legendContainer.innerHTML = "<h3 style='margin: 0; text-align: center;'>위험도</h3>";
+
+  const legendContent = document.createElement("div");
+  legendContent.style.display = "grid";
+  legendContent.style.gridTemplateColumns = "1fr 1fr";
+  legendContent.style.gap = "5px";
+
+  legendData.forEach((item) => {
+    const legendItem = document.createElement("div");
+    legendItem.style.display = "flex";
+    legendItem.style.alignItems = "center";
+
+    const colorBox = document.createElement("div");
+    colorBox.style.width = "15px";
+    colorBox.style.height = "15px";
+    colorBox.style.backgroundColor = item.color;
+    colorBox.style.marginRight = "5px";
+
+    const gradeText = document.createElement("span");
+    gradeText.textContent = item.grade;
+    gradeText.style.fontSize = "12px";
+
+    legendItem.appendChild(colorBox);
+    legendItem.appendChild(gradeText);
+
+    legendContent.appendChild(legendItem);
+  });
+
+  legendContainer.appendChild(legendContent);
+  document.body.appendChild(legendContainer);
+}
+
+
   // 현재 위치 기반으로 지도를 이동시키는 함수
   function setCurrentLocation() {
     if (navigator.geolocation) {
@@ -163,8 +220,8 @@ function initMap() {
         (position) => {
           const { latitude, longitude } = position.coords;
           const coords = ol.proj.fromLonLat([longitude, latitude]);
-          map.getView().setCenter(coords); // 지도 중심을 현재 위치로 이동
-          map.getView().setZoom(15); // 줌 레벨 설정
+          map.getView().setCenter(coords);
+          map.getView().setZoom(15);
         },
         (error) => {
           console.error(`[ERROR] Geolocation failed: ${error.message}`);
@@ -201,50 +258,7 @@ function initMap() {
 
     document.body.appendChild(button);
   }
-  // 범례 데이터를 XML에서 로드하는 함수
-  function loadLegend(layer, style) {
-    const apiKey = "TW2ZPXA0-TW2Z-TW2Z-TW2Z-TW2ZPXA04O";
-
-    // 프록시 서버 URL을 사용
-    const proxyUrl = `http://10.0.2.2:3000/proxy`; // Node.js 프록시 서버
-    const targetUrl = `http://www.safemap.go.kr/legend/legendApiXml.do?apikey=${apiKey}&layer=${layer}&style=${style}`;
-    const url = `${proxyUrl}?url=${encodeURIComponent(targetUrl)}`;
-
-    fetch(url)
-      .then((response) => {
-        console.log(`[DEBUG] Fetch response status: ${response.status}`);
-        if (!response.ok) throw new Error("Failed to fetch legend data");
-        return response.text();
-      })
-      .then((xmlString) => {
-        // XML 문자열을 DOM 객체로 변환
-        const parser = new DOMParser();
-        const xmlDoc = parser.parseFromString(xmlString, "application/xml");
-
-        // XML에서 범례 데이터를 파싱
-        const legends = xmlDoc.getElementsByTagName("legend");
-        const legendContent = document.getElementById("legend-content");
-        legendContent.innerHTML = ""; // 기존 범례 데이터 초기화
-
-        // 범례 데이터 추가
-        for (let i = 0; i < legends.length; i++) {
-          const legend = legends[i];
-          const color = legend.getElementsByTagName("color")[0].textContent;
-          const label = legend.getElementsByTagName("label")[0].textContent;
-
-          const legendItem = document.createElement("div");
-          legendItem.innerHTML = `
-                    <span style="color: ${color};">●</span> ${label}
-                `;
-          legendContent.appendChild(legendItem);
-        }
-      })
-      .catch((error) => {
-        console.error(`[ERROR] Fetch failed: ${error.message}`);
-      });
-  }
-
-   loadLegend("A2SM_CRMNLHSPOT_TOT", "A2SM_CrmnlHspot_Tot_Tot");
+  addLegendManually();
 
   // 맵 초기화 시 현재 위치 설정
   setCurrentLocation();
