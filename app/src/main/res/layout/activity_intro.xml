@@ -22,16 +22,16 @@
             android:layout_gravity="center"
             android:textColor="@color/white"/>
 
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:fontFamily="@font/mangobyeolbyeol"
             android:padding="16dp"
-            android:text="@string/intro"
+            android:text="주변의 범죄 위험 구역을 한눈에"
             android:textColor="@color/white"
             android:textSize="20sp" />
-
         <ImageView
             android:layout_width="120dp"
             android:layout_height="170dp"
