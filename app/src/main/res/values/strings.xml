@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">TeamProject</string>
+    <string name="title">냥냥크라임</string>
+    <string name="intro">주변의 범죄 위험 구역을 한눈에</string>
     <string name="vworld_api_key">7AACB7E3-3F8C-315A-9BC4-9086ABB03D25</string>
 </resources>
