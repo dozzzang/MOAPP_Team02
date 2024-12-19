@@ -50,7 +50,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/right_chat_view"
         android:background="@drawable/rounded_corner_user"
-        android:backgroundTint="@color/blue"
+        android:backgroundTint="@color/primary"
         android:layout_marginStart="80dp"
         android:layout_alignParentEnd="true"
         android:paddingHorizontal="16dp"

@@ -7,6 +7,26 @@
     android:layout_height="match_parent"
     tools:context=".MapActivity"
     android:orientation="vertical">
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        app:navigationIcon="@drawable/back"
+        android:background="@color/white"
+        app:title=""
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="냥냥크라임지도"
+            android:fontFamily="@font/mangobyeolbyeol"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="20dp"/>
+    </androidx.appcompat.widget.Toolbar>
 
     <WebView
         android:id="@+id/webView"
