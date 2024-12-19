@@ -13,27 +13,233 @@
             type="text/javascript"
             src="https://map.vworld.kr/js/vworldMapInit.js.do?version=2.0&apiKey=7AACB7E3-3F8C-315A-9BC4-9086ABB03D25"
     ></script>
-    <script src="createMap.js" defer></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            alert("HTML and JavaScript are working!");
-        });
-    </script>
+    <script defer>
+        function initMap() {
+            const map = new ol.Map({
+                target: "vmap",
+                view: new ol.View({
+                    center: ol.proj.fromLonLat([127.1, 37.6]),
+                    zoom: 15,
+                }),
+                interactions: ol.interaction.defaults().extend([
+                    new ol.interaction.MouseWheelZoom(),
+                ]),
+                layers: [
+                    new ol.layer.Tile({
+                        source: new ol.source.XYZ({
+                            url: "https://xdworld.vworld.kr/2d/Base/202002/{z}/{x}/{y}.png",
+                        }),
+                    }),
+                ],
+            });
 
+            // WMS 레이어 생성 함수
+            function createWMSLayer(layername, styles) {
+                return new ol.layer.Tile({
+                    source: new ol.source.TileWMS({
+                        url: "https://www.safemap.go.kr/openApiService/wms/getLayerData.do?apikey=TW2ZPXA0-TW2Z-TW2Z-TW2Z-TW2ZPXA04O",
+                        params: {
+                            LAYERS: layername,
+                            STYLES: styles,
+                            FORMAT: "image/png",
+                            TRANSPARENT: true,
+                        },
+                        projection: "EPSG:3857",
+                    }),
+                });
+            }
+
+            // 레이어 객체 생성
+            const layers = {
+                all: createWMSLayer("A2SM_CRMNLHSPOT_TOT", "A2SM_CrmnlHspot_Tot_Tot"),
+                rape: createWMSLayer("A2SM_CRMNLHSPOT_TOT", "A2SM_CrmnlHspot_Tot_Rape"),
+                robbery: createWMSLayer("A2SM_CRMNLHSPOT_TOT", "A2SM_CrmnlHspot_Tot_Brglr"),
+                theft: createWMSLayer("A2SM_CRMNLHSPOT_TOT", "A2SM_CrmnlHspot_Tot_Theft"),
+            };
+
+            // 기본 레이어 설정
+            layers.all.setVisible(true);
+            map.addLayer(layers.all);
+            map.addLayer(layers.rape);
+            map.addLayer(layers.robbery);
+            map.addLayer(layers.theft);
+
+            // 숨김 초기화
+            layers.rape.setVisible(false);
+            layers.robbery.setVisible(false);
+            layers.theft.setVisible(false);
+
+            // 체크박스 UI 추가
+            function addLayerControl() {
+                const controlContainer = document.createElement("div");
+                controlContainer.id = "layer-control";
+                controlContainer.style.position = "absolute";
+                controlContainer.style.top = "10px";
+                controlContainer.style.right = "10px";
+                controlContainer.style.backgroundColor = "rgba(255, 255, 255, 0.9)";
+                controlContainer.style.padding = "10px";
+                controlContainer.style.borderRadius = "5px";
+                controlContainer.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.5)";
+                controlContainer.style.zIndex = 1001; // 체크박스 UI 우선 순위
+                controlContainer.innerHTML = `
+                    <h3 style="margin: 0;">표시하고자 하는 내용 고르기</h3>
+                    <label><input type="checkbox" id="all-layer" checked> 모두 보기</label><br>
+                    <label><input type="checkbox" id="rape-layer"> 성폭력</label><br>
+                    <label><input type="checkbox" id="robbery-layer"> 강도</label><br>
+                    <label><input type="checkbox" id="theft-layer"> 절도</label>
+                `;
+                document.body.appendChild(controlContainer);
+
+                // 이벤트 리스너
+                document.getElementById("all-layer").addEventListener("change", (e) => {
+                    const checked = e.target.checked;
+                    layers.all.setVisible(checked);
+                    document.getElementById("rape-layer").checked = checked;
+                    document.getElementById("robbery-layer").checked = checked;
+                    document.getElementById("theft-layer").checked = checked;
+
+                    layers.rape.setVisible(checked);
+                    layers.robbery.setVisible(checked);
+                    layers.theft.setVisible(checked);
+                });
+
+                document.getElementById("rape-layer").addEventListener("change", (e) => {
+                    layers.rape.setVisible(e.target.checked);
+                });
+
+                document.getElementById("robbery-layer").addEventListener("change", (e) => {
+                    layers.robbery.setVisible(e.target.checked);
+                });
+
+                document.getElementById("theft-layer").addEventListener("change", (e) => {
+                    layers.theft.setVisible(e.target.checked);
+                });
+            }
+
+            addLayerControl();
+
+            // 현재 위치 버튼 추가
+            function setCurrentLocation() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            const { latitude, longitude } = position.coords;
+                            const coords = ol.proj.fromLonLat([longitude, latitude]);
+                            map.getView().setCenter(coords);
+                            map.getView().setZoom(15);
+                        },
+                        (error) => {
+                            console.error(`[ERROR] Geolocation failed: ${error.message}`);
+                            alert("현재 위치를 가져올 수 없습니다.");
+                        }
+                    );
+                } else {
+                    console.error("[ERROR] Geolocation is not supported by this browser.");
+                    alert("브라우저가 현재 위치 기능을 지원하지 않습니다.");
+                }
+            }
+
+            const locationButton = document.createElement("button");
+            locationButton.innerHTML = `<img src="https://img.icons8.com/ios-filled/50/000000/marker.png" alt="현재 위치" style="width: 20px; height: 20px; vertical-align: middle;" />`;
+            locationButton.title = "현재 위치로 이동";
+            locationButton.style.position = "absolute";
+            locationButton.style.bottom = "80px";
+            locationButton.style.right = "10px";
+            locationButton.style.width = "50px";
+            locationButton.style.height = "50px";
+            locationButton.style.backgroundColor = "white";
+            locationButton.style.border = "1px solid #ccc";
+            locationButton.style.borderRadius = "50%";
+            locationButton.style.boxShadow = "0 2px 6px rgba(0,0,0,0.3)";
+            locationButton.style.display = "flex";
+            locationButton.style.alignItems = "center";
+            locationButton.style.justifyContent = "center";
+            locationButton.style.cursor = "pointer";
+            locationButton.style.zIndex = 1002; // 현재 위치 버튼 우선 순위
+            locationButton.onclick = setCurrentLocation;
+            document.body.appendChild(locationButton);
+
+            // 범례 추가
+            function addLegend() {
+                const legendData = [
+                    { color: "#ffffb2", grade: "1등급" },
+                    { color: "#fee88b", grade: "2등급" },
+                    { color: "#fed165", grade: "3등급" },
+                    { color: "#fdb751", grade: "4등급" },
+                    { color: "#fd9b43", grade: "5등급" },
+                    { color: "#fa7a35", grade: "6등급" },
+                    { color: "#f45629", grade: "7등급" },
+                    { color: "#ea3420", grade: "8등급" },
+                    { color: "#d31a23", grade: "9등급" },
+                    { color: "#bd0026", grade: "10등급" },
+                ];
+
+                const legendContainer = document.createElement("div");
+                legendContainer.id = "legend-container";
+                legendContainer.style.position = "absolute";
+                legendContainer.style.bottom = "20px";
+                legendContainer.style.left = "10px";
+                legendContainer.style.backgroundColor = "rgba(255, 255, 255, 0.9)";
+                legendContainer.style.padding = "10px";
+                legendContainer.style.borderRadius = "5px";
+                legendContainer.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.5)";
+                legendContainer.style.width = "160px";
+                legendContainer.style.zIndex = 1002;
+
+                const legendTitle = document.createElement("h3");
+                legendTitle.textContent = "위험도";
+                legendTitle.style.margin = "0";
+                legendTitle.style.textAlign = "center";
+                legendContainer.appendChild(legendTitle);
+
+                const legendContent = document.createElement("div");
+                legendContent.style.display = "grid";
+                legendContent.style.gridTemplateColumns = "1fr 1fr";
+                legendContent.style.gap = "5px";
+
+                legendData.forEach((item) => {
+                    const legendItem = document.createElement("div");
+                    legendItem.style.display = "flex";
+                    legendItem.style.alignItems = "center";
+
+                    const colorBox = document.createElement("div");
+                    colorBox.style.width = "15px";
+                    colorBox.style.height = "15px";
+                    colorBox.style.backgroundColor = item.color;
+                    colorBox.style.marginRight = "5px";
+
+                    const gradeText = document.createElement("span");
+                    gradeText.textContent = item.grade;
+                    gradeText.style.fontSize = "12px";
+
+                    legendItem.appendChild(colorBox);
+                    legendItem.appendChild(gradeText);
+                    legendContent.appendChild(legendItem);
+                });
+
+                legendContainer.appendChild(legendContent);
+                document.body.appendChild(legendContainer);
+            }
+
+            addLegend();
+        }
+
+        document.addEventListener("DOMContentLoaded", initMap);
+    </script>
     <style>
         #vmap {
-          width: 100%;
-          height: 98vh;
+            width: 100%;
+            height: 98vh;
         }
-        #legend {
-          position: absolute;
-          bottom: 10px;
-          left: 10px;
-          background: white;
-          padding: 10px;
-          border: 1px solid black;
-          border-radius: 5px;
-          font-size: 12px;
+        #layer-control {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 1001;
         }
     </style>
 </head>
