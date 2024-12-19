@@ -1,0 +1,18 @@
+[
+    {
+        "merged": "C:\\Program Files\\Android\\Android Studio\\jbr\\bin\\C\\DC\\gradle\\daemon\\8.7\\com.example.teamproject.app-mergeDebugResources-31:\\layout\\activity_map.xml",
+        "source": "C:\\Program Files\\Android\\Android Studio\\jbr\\bin\\C\\DC\\gradle\\daemon\\8.7\\com.example.teamproject.app-main-34:\\layout\\activity_map.xml"
+    },
+    {
+        "merged": "C:\\Program Files\\Android\\Android Studio\\jbr\\bin\\C\\DC\\gradle\\daemon\\8.7\\com.example.teamproject.app-mergeDebugResources-31:\\layout\\activity_main.xml",
+        "source": "C:\\Program Files\\Android\\Android Studio\\jbr\\bin\\C\\DC\\gradle\\daemon\\8.7\\com.example.teamproject.app-main-34:\\layout\\activity_main.xml"
+    },
+    {
+        "merged": "com.example.teamproject.app-mergeDebugResources-31:/layout/activity_chat.xml",
+        "source": "com.example.teamproject.app-main-34:/layout/activity_chat.xml"
+    },
+    {
+        "merged": "com.example.teamproject.app-mergeDebugResources-31:/layout/chat_item.xml",
+        "source": "com.example.teamproject.app-main-34:/layout/chat_item.xml"
+    }
+]
