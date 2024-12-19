@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="blue">#5F9BF5</color>
+    <color name="launcher_color">#E68012</color>
+    <color name="lightgray">#EDEDED</color>
+    <color name="white">#FFFFFFFF</color>
+    <string name="app_name">TeamProject</string>
+    <string name="vworld_api_key">7AACB7E3-3F8C-315A-9BC4-9086ABB03D25</string>
+    <style name="Base.Theme.TeamProject" parent="Theme.Material3.DayNight.NoActionBar">
+        
+        
+        <item name="android:windowBackground">@color/launcher_color</item>
+    </style>
+    <style name="Theme.MyApp.Splash" parent="Theme.AppCompat.Light.NoActionBar">
+        
+        <item name="android:windowBackground">@color/launcher_color</item>
+    </style>
+    <style name="Theme.TeamProject" parent="Base.Theme.TeamProject"/>
+</resources>
