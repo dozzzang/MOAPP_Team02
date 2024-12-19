@@ -93,6 +93,9 @@ function initMap() {
     controlContainer.style.padding = "10px";
     controlContainer.style.borderRadius = "5px";
     controlContainer.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.5)";
+    controlContainer.style.fontSize = "12px";
+      controlContainer.style.zIndex = "1000";
+      controlContainer.style.width = "150px";
     controlContainer.innerHTML = `
       <h3 style="margin = 0;">지도에 표시할 빈도 항목을 선택</h3>
       <div>
@@ -173,14 +176,18 @@ function addLegendManually() {
   const legendContainer = document.createElement("div");
   legendContainer.id = "legend-container";
   legendContainer.style.position = "absolute";
-  legendContainer.style.bottom = "20px";
+  legendContainer.style.bottom = "10px";
   legendContainer.style.left = "10px";
   legendContainer.style.backgroundColor = "rgba(255, 255, 255, 0.9)";
   legendContainer.style.padding = "10px";
   legendContainer.style.borderRadius = "5px";
   legendContainer.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.5)";
-  legendContainer.style.width = "160px";
-  legendContainer.innerHTML = "<h3 style='margin: 0; text-align: center;'>위험도</h3>";
+  legendContainer.style.zIndex = "1000";
+
+  const legendTitle = document.createElement("h3");
+  legendTitle.style.margin = "0";
+  legendTitle.style.textAlign = "center";
+  legendTitle.innerText = "위험도";
 
   const legendContent = document.createElement("div");
   legendContent.style.display = "grid";
@@ -208,8 +215,9 @@ function addLegendManually() {
     legendContent.appendChild(legendItem);
   });
 
+  legendContainer.appendChild(legendTitle);
   legendContainer.appendChild(legendContent);
-  document.body.appendChild(legendContainer);
+  document.getElementById("vmap").appendChild(legendContainer);
 }
 
 
@@ -240,14 +248,14 @@ function addLegendManually() {
     button.innerHTML = `<img src="https://img.icons8.com/ios-filled/50/000000/marker.png" alt="현재 위치" style="width: 20px; height: 20px; vertical-align: middle;" />`;
     button.title = "현재 위치로 이동";
     button.style.position = "absolute";
-    button.style.bottom = "20px";
+    button.style.bottom = "10px";
     button.style.right = "10px";
-    button.style.width = "50px";
-    button.style.height = "50px";
+    button.style.width = "40px";
+    button.style.height = "40px";
     button.style.backgroundColor = "white";
     button.style.border = "1px solid #ccc";
     button.style.borderRadius = "50%";
-    button.style.boxShadow = "0 2px 6px rgba(0,0,0,0.3)";
+    button.style.boxShadow = "0 2px 5px rgba(0,0,0,0.3)";
     button.style.display = "flex";
     button.style.alignItems = "center";
     button.style.justifyContent = "center";
