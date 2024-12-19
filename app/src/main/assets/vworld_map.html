@@ -18,7 +18,7 @@
             const map = new ol.Map({
                 target: "vmap",
                 view: new ol.View({
-                    center: ol.proj.fromLonLat([127.1, 37.6]),
+                    center: ol.proj.fromLonLat([128.6114, 35.8906]),
                     zoom: 15,
                 }),
                 interactions: ol.interaction.defaults().extend([
@@ -130,7 +130,6 @@
                         },
                         (error) => {
                             console.error(`[ERROR] Geolocation failed: ${error.message}`);
-                            alert("현재 위치를 가져올 수 없습니다.");
                         }
                     );
                 } else {
@@ -138,6 +137,7 @@
                     alert("브라우저가 현재 위치 기능을 지원하지 않습니다.");
                 }
             }
+            setCurrentLocation();
 
             const locationButton = document.createElement("button");
             locationButton.innerHTML = `<img src="https://img.icons8.com/ios-filled/50/000000/marker.png" alt="현재 위치" style="width: 20px; height: 20px; vertical-align: middle;" />`;
@@ -158,6 +158,13 @@
             locationButton.style.zIndex = 1002; // 현재 위치 버튼 우선 순위
             locationButton.onclick = setCurrentLocation;
             document.body.appendChild(locationButton);
+
+            //현재위치기반
+            function updateMapLocation(latitude, longitude) {
+            const coords = ol.proj.fromLonLat([longitude, latitude]);
+            map.getView().setCenter(coords);
+            map.getView().setZoom(15);
+            }
 
             // 범례 추가
             function addLegend() {
