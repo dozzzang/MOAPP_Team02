@@ -141,6 +141,7 @@
     </LinearLayout>
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/callbtn"
         android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="88dp"
@@ -154,7 +155,7 @@
         android:fontFamily="@font/pretendard_bold"
         android:textStyle="bold"
         android:textColor="#E27500"
-        android:text="알림 확인하기"
+        android:text="긴급 전화하기"
         android:textSize="19sp"/>
 
 </LinearLayout>

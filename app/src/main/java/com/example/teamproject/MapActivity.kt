@@ -23,6 +23,9 @@ class MapActivity : AppCompatActivity() {
         binding = ActivityMapBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.title=""
+
         // SelfSigningHelper를 통해 SSLContext 설정
         val sslHelper = SelfSigningHelper(this)
         sslOkHttpClient = OkHttpClient.Builder()
@@ -35,6 +38,9 @@ class MapActivity : AppCompatActivity() {
 
         setupWebView()
         fetchAndLoadUrl()
+        binding.toolbar.setNavigationOnClickListener {
+            onBackPressed() // 기본 뒤로가기 동작 호출
+        }
     }
 
     /**

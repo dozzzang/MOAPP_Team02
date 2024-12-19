@@ -2,6 +2,7 @@ package com.example.teamproject
 
 import android.R
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageButton
@@ -37,6 +38,9 @@ class ChatActivity : AppCompatActivity() {
         binding = ActivityChatBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.title=""
+
         binding.recyclerView.setHasFixedSize(true)
         val manager = LinearLayoutManager(this).apply { stackFromEnd = true }
         binding.recyclerView.layoutManager = manager
@@ -52,6 +56,10 @@ class ChatActivity : AppCompatActivity() {
                 callAPI(question)
                 binding.tvWelcome.visibility = View.GONE
             }
+        }
+
+        binding.toolbar.setNavigationOnClickListener {
+            onBackPressed() // 기본 뒤로가기 동작 호출
         }
     }
 
