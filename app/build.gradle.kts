@@ -37,7 +37,7 @@ android {
 }
 
 dependencies {
-    implementation("com.squareup.okhttp3:okhttp:4.9.3") // OkHttp 라이브러리
+    implementation("com.squareup.okhttp3:okhttp:4.10.0") // OkHttp 라이브러리
     implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
