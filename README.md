@@ -31,12 +31,5 @@ node proxy.js
 ## License
 ```
 
-```
-|           -2022_data.csv
-|           -2027_data.csv
-|           -2032_data.csv
-|           -2036_data.csv
-|           -2037_data.csv
-|           2013-2022data.csv
-``` 
+
 
