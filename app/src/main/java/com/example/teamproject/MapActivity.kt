@@ -1,6 +1,7 @@
 package com.example.teamproject
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.net.http.SslError
 import android.os.Bundle
 import android.util.Log
@@ -22,7 +23,7 @@ class MapActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMapBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        window.statusBarColor = Color.parseColor("#B8660E")
         setSupportActionBar(binding.toolbar)
         supportActionBar?.title=""
 
@@ -39,7 +40,7 @@ class MapActivity : AppCompatActivity() {
         setupWebView()
         fetchAndLoadUrl()
         binding.toolbar.setNavigationOnClickListener {
-            onBackPressed() // 기본 뒤로가기 동작 호출
+            onBackPressedDispatcher.onBackPressed() // 새로운 API 사용
         }
     }
 
