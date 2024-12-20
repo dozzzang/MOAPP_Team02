@@ -34,6 +34,6 @@ node proxy.js
 ---
 ## 🎥 시연 영상
 
-https://youtube.com/shorts/2uBItMO0C_U
+[https://youtube.com/shorts/2uBItMO0C_U](https://youtube.com/shorts/8JBLPOV-fjU)
 
 
