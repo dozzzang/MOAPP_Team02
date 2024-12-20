@@ -1,6 +1,7 @@
 package com.example.teamproject
 
 import android.R
+import android.graphics.Color
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -34,6 +35,7 @@ class ChatActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.statusBarColor = Color.parseColor("#B8660E")
 
         binding = ActivityChatBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -62,6 +64,7 @@ class ChatActivity : AppCompatActivity() {
             onBackPressed() // 기본 뒤로가기 동작 호출
         }
     }
+
 
     private fun addToChat(message: String, sentBy: String) {
         runOnUiThread {
@@ -134,6 +137,6 @@ class ChatActivity : AppCompatActivity() {
 
     companion object {
         val JSON: MediaType = "application/json; charset=utf-8".toMediaType()
-        private const val MY_SECRET_KEY = "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"
+        private const val MY_SECRET_KEY = "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"
     }
 }
